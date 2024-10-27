@@ -253,3 +253,70 @@ function setEvents(filteredEvents = events) {
   updatePaginationButtons();
   countInProgressEvents();
 }
+
+
+// Example previous year values for total events, active speakers, and registrations
+// Previous year data
+const previousYearData = {
+  totalEvents: 10,    // Last year's total events
+  activeSpeakers: 4,  // Last year's active speakers
+  registrations: 20,  // Last year's total registrations
+  revenue: 2000       // Last year's total revenue
+};
+
+// Current year values can be dynamically calculated from your data
+const currentYearData = {
+  totalEvents: events.length,
+  activeSpeakers: events.filter(event => event.status === 'In Progress').length,
+  registrations: 25,
+  revenue: calculateTotalRevenue()
+};
+
+// Function to calculate total revenue
+function calculateTotalRevenue() {
+  const totalRevenue = events.reduce((sum, event) => sum + (event.price || 0), 0);
+  const revenueElement = document.getElementById("total-revenue");
+  if (revenueElement) {
+    revenueElement.innerHTML = `$${totalRevenue}`;
+  }
+  return totalRevenue;
+}
+
+// General function to calculate percentage change
+function calculatePercentageChange(previous, current) {
+  if (previous === 0) return 0;
+  const change = ((current - previous) / previous) * 100;
+  return change.toFixed(2);
+}
+
+// General function to display percentage change with arrows
+function displayPercentageChange(previousValue, currentValue, elementId) {
+  const percentageChange = calculatePercentageChange(previousValue, currentValue);
+  const element = document.getElementById(elementId);
+  
+  if (element) {
+    let arrow = "";
+    let arrowColor = "";
+
+    // Determine if the value increased or decreased
+    if (percentageChange > 0) {
+      arrow = "&#x2197;"; // Upward arrow (↗)
+      arrowColor = "green";
+    } else if (percentageChange < 0) {
+      arrow = "&#x2198;"; // Downward arrow (↘)
+      arrowColor = "red";
+    } else {
+      arrow = "";  // No change arrow for 0%
+    }
+
+    element.innerHTML = `${arrow ? `<span style="color: ${arrowColor};">${arrow}</span>` : ""} ${Math.abs(percentageChange)}%`;
+  }
+}
+
+// Function to update all stats on page load
+document.addEventListener("DOMContentLoaded", function () {
+  displayPercentageChange(previousYearData.totalEvents, currentYearData.totalEvents, "total-event-change");
+  displayPercentageChange(previousYearData.activeSpeakers, currentYearData.activeSpeakers, "active-speaker-change");
+  displayPercentageChange(previousYearData.registrations, currentYearData.registrations, "registration-change");
+  displayPercentageChange(previousYearData.revenue, currentYearData.revenue, "percentage-change");
+});
