@@ -13,6 +13,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="scripts/scripts.js"></script>
 </head>
+
 <body>
   <!-- Main header section -->
 
@@ -133,7 +134,63 @@
         </div>
       </div>
     </section>
+    <!-- Chart section -->
+    <div class="chart-carousel">
+      <section class="chart-section">
+        <div class="chart-container">
+          <canvas id="myChart" style="width:100%; height:260px;"></canvas>
+        </div>
+      </section>
 
+      <!-- Carousel Section-->
+
+      <section class="carousel">
+        <div class="carousel-container">
+          <div class="carousel-inner" id="carousel">
+            <div class="carousel-item active" id="slide-container">
+              <img src="./Assets/Images/lady.png" alt="Slide 1">
+              <div class="text-container">
+                <div class="text">
+                  <p>Latest News & Updates</p>
+                  <p>Turpis interdum nunc varius ornare dignissim pretium. Massa ornare quis aliquet sed vitae. Sed velit nisi, fermentum erat. Fringilla purus, erat fringilla tincidunt quisque non. Pellentesque in ut tellus.</p>
+                </div>
+              </div>
+            </div>
+            <div class="carousel-item" id="slide-container">
+              <img src="./Assets/Images/guy.png" alt="Slide 2">
+              <div class="text-container">
+                <div class="text">
+                  <p>Latest News & Updates</p>
+                  <p>Turpis interdum nunc varius ornare dignissim pretium. Massa ornare quis aliquet sed vitae. Sed velit nisi, fermentum erat. Fringilla purus, erat fringilla tincidunt quisque non. Pellentesque in ut tellus.</p>
+                </div>
+              </div>
+
+            </div>
+            <div class="carousel-item" id="slide-container">
+              <img src="./Assets/Images/project.png" alt="Slide 3">
+              <div class="text-container">
+                <div class="text">
+                  <p>Latest News & Updates</p>
+                  <p>Turpis interdum nunc varius ornare dignissim pretium. Massa ornare quis aliquet sed vitae. Sed velit nisi, fermentum erat. Fringilla purus, erat fringilla tincidunt quisque non. Pellentesque in ut tellus.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Navigation buttons -->
+          <a class="carousel-prev btn" onclick="prevSlide()">&#10094;</a>
+          <a class="carousel-next btn" onclick="nextSlide()">&#10095;</a>
+
+          <!-- Slide indicators -->
+          <div class="dots-container" style="text-align:center">
+            <span class="dot" onclick="currentSlide(1)"></span>
+            <span class="dot" onclick="currentSlide(2)"></span>
+            <span class="dot" onclick="currentSlide(3)"></span>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 </body>
+
 </html>
