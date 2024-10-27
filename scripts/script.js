@@ -371,3 +371,38 @@ function revenueChart() {
 }
 
 document.addEventListener("DOMContentLoaded", revenueChart);
+
+// Carousel Slider
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.carousel-inner .carousel-item');
+const dots = document.querySelectorAll('.dot');
+
+// Function to update the carousel display
+function updateCarousel() {
+  // Hide all slides and remove active class from dots
+  slides.forEach((slide, index) => {
+    slide.classList.remove('active');
+    dots[index]?.classList.remove('active');
+  });
+
+  // Show the current slide and set the corresponding dot to active
+  slides[currentSlideIndex].classList.add('active');
+  dots[currentSlideIndex].classList.add('active');
+}
+
+// Function to go to the next slide
+function nextSlide() {
+  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+  updateCarousel();
+};
+
+// Function to go to the previous slide
+function prevSlide() {
+  currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+  updateCarousel();
+}
+
+setInterval(nextSlide, 400000);
+
+document.querySelector('.carousel-next').addEventListener('click', nextSlide);
+document.querySelector('.carousel-prev').addEventListener('click', prevSlide);
