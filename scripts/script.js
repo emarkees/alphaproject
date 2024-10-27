@@ -1,6 +1,19 @@
 const hamburger = document.getElementById("hamburger");
 const menuIcon = document.getElementById("hamburger");
 const navLinksContainer = document.querySelector(".nav-links-container");
+const worksSection = document.querySelector(".work-container");
+const eventCounts = document.getElementById("event-count");
+const totalEvents = document.getElementById("total-event");
+const rowCounts = document.getElementById("rows-count");
+const currentPages = document.getElementById("current-page");
+const totalPage = document.getElementById("total-pages");
+const modal = document.getElementById("event-modal");
+const closeButton = document.getElementById("close-button");
+let currentlyOpenRow = null; // Variable to keep track of the currently open row
+
+// Set Events
+let eventsPerPage = 10;
+let currentPage = 1;
 
 function toggleMenu() {
   navLinksContainer.classList.toggle("active");
@@ -254,6 +267,104 @@ function setEvents(filteredEvents = events) {
   countInProgressEvents();
 }
 
+// Function to toggle event details on mobile
+function toggleDetails(row) {
+  const detailsRow = row.nextElementSibling;
+  if (detailsRow && detailsRow.classList.contains('event-details')) {
+    const isHidden = detailsRow.style.display === 'none';
+    detailsRow.style.display = isHidden ? 'table-row' : 'none';
+  }
+}
+
+function toggleDropdown(button) {
+  const row = button.closest("tr");
+  const nextRow = row.nextElementSibling;
+  if (nextRow && nextRow.classList.contains("mobile-details")) {
+    if (nextRow.style.display === "table-row") {
+      nextRow.style.display = "none";
+      button.innerHTML = 'Details <i class="fa-solid fa-chevron-down dropdown-icon"></i>';
+    } else {
+      nextRow.style.display = "table-row";
+      button.innerHTML = 'Details <i class="fa-solid fa-chevron-up"></i>';
+    }
+  }
+}
+
+function toggleDetails(row) {
+  const nextRow = row.nextElementSibling;
+
+  // Close previously opened row if another is clicked
+  if (currentlyOpenRow && currentlyOpenRow !== row) {
+    const prevNextRow = currentlyOpenRow.nextElementSibling;
+    if (prevNextRow && prevNextRow.classList.contains("event-details")) {
+      prevNextRow.style.display = "none";
+      currentlyOpenRow.classList.remove("active");
+    }
+  }
+
+  // Handle the current row/hide and show
+  if (nextRow && nextRow.classList.contains("event-details")) {
+    if (nextRow.style.display === "table-row" || nextRow.style.display === "") {
+      nextRow.style.display = "none";
+      row.classList.remove("active");
+      currentlyOpenRow = null;
+    } else {
+      nextRow.style.display = "table-row";
+      row.classList.add("active");
+      currentlyOpenRow = row;
+    }
+  }
+}
+
+function setPageNumbers(currentPage, totalPages) {
+  const currentPageElement = document.getElementById('current-page');
+
+  // Check if the element exists before trying to modify it
+  if (!currentPageElement) {
+    console.error("Element with ID 'current-page' not found.");
+    return;
+  }
+
+  currentPageElement.innerHTML = ""; // Clear existing content
+  const pagesToShow = [];
+  const maxPagesToShow = 4; // Number of pages to display
+  const startPage = Math.max(1, currentPage - 1);
+  const endPage = Math.min(totalPages, currentPage + 2);
+
+  // Construct the array of pages to display
+  if (startPage > 1) {
+    pagesToShow.push(1);
+    if (startPage > 2) pagesToShow.push("...");
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pagesToShow.push(i);
+  }
+
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) pagesToShow.push("...");
+    pagesToShow.push(totalPages);
+  }
+
+  // Render the page numbers
+  pagesToShow.forEach((pageNumber) => {
+    if (pageNumber === currentPage) {
+      currentPageElement.innerHTML += `<span class="count active" style="background-color: #8576ff; color: white;">${pageNumber}</span>`;
+    } else if (pageNumber === "...") {
+      currentPageElement.innerHTML += `<span class="count" style="background-color: white; color: black;">${pageNumber}</span>`;
+    } else {
+      currentPageElement.innerHTML += `<span class="count" style="background-color: white; color: black;" onclick="goToPage(${pageNumber})">${pageNumber}</span>`;
+    }
+  });
+
+}
+
+// Function to change the number of events displayed per page
+function changeEventsPerPage(count) {
+  eventsPerPage = parseInt(count);
+  currentPage = 1;
+  setEvents();
+}
 
 // Example previous year values for total events, active speakers, and registrations
 // Previous year data
@@ -491,3 +602,168 @@ document.addEventListener("DOMContentLoaded", () => {
   handleSearch();
 });
 
+// Function to go to a specific page
+function goToPage(pageNumber) {
+  currentPage = pageNumber;
+  setEvents();
+}
+
+// Function to go to the next page
+function nextPage() {
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    setEvents();
+  }
+}
+
+// Function to go to the previous page
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    setEvents();
+  }
+}
+
+// Function to count the number of events that are "In Progress"
+function countInProgressEvents() {
+  const inProgressCount = events.filter(event => event.status === "In Progress").length;
+  const inProgressCountElement = document.getElementById("in-progress-count");
+  if (inProgressCountElement) {
+    inProgressCountElement.innerHTML = `${inProgressCount}`;
+  }
+  return inProgressCount;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  countInProgressEvents();
+  setEvents(); // Initially load all events
+});
+
+// Function to open the modal with event data
+function openModal(eventData) {
+  const title = modal.querySelector('.primary-title');
+  const img = modal.querySelector('#modal-speaker-image');
+  const description = modal.querySelector('#modal-event-description');
+  const date = modal.querySelector('#modal-event-date');
+  const speaker = modal.querySelector('#modal-speaker-name');
+
+  // Populate modal with event data
+  title.textContent = eventData.eventName || "No title available";
+  img.src = eventData.speakerImage || "";
+  description.textContent = eventData.description || "No description available.";
+  date.textContent = eventData.date || "No date available.";
+  speaker.textContent = eventData.speaker || "No speaker available.";
+
+  // Show modal
+  modal.style.display = 'flex';
+}
+
+// Function to close the modal
+closeButton.onclick = function () {
+  modal.style.display = 'none';
+};
+
+document.querySelectorAll(".close-button").forEach((n) =>
+  n.addEventListener("click", () => {
+    modal.classList.remove("active");
+  })
+);
+
+// Close the modal if the user clicks outside the modal content
+window.onclick = function (event) {
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
+
+modalbtn = document.addEventListener('click', openModal)
+
+// Add event listeners to the "event-row" class to trigger the modal
+document.querySelectorAll('.event-row').forEach((row, index) => {
+  row.addEventListener('click', () => {
+    const eventData = events[index];
+    openModal(eventData);
+  });
+});
+
+// Desktop nav
+let isOpen = false;
+
+function openNav() {
+  const sidenav = document.getElementById("mySidenav");
+  const navLinks = document.getElementById("nav-links");
+  const logo = document.getElementById("logo");
+  const menuIcon = document.getElementById("menu-icon");
+  const navLinkText = document.querySelectorAll("#nav-link");
+  const mainContent = document.getElementById("main");
+
+  // Toggle the sidenav state
+  sidenav.classList.toggle("active");
+
+  if (!isOpen) {
+    // Expand sidenav
+   
+    sidenav.style.width = "6%";
+    sidenav.classList.add("small");
+    mainContent.style.width = "92%";
+    logo.style.display = "none"; // Hide logo
+    navLinkText.forEach(link => link.style.display = "none"); // Hide nav links
+    menuIcon.innerHTML = `<i class="fa-solid fa-x"></i>`
+    menuIcon.alt = "Menus"; // Update alt text
+  } else {
+    // Collapse sidenav
+    sidenav.style.width = "20%";
+    sidenav.classList.remove("small");
+    mainContent.style.width = "80%";
+    navLinks.style.width = "100%";
+    logo.style.display = "block"; 
+    navLinkText.forEach(link => link.style.display = "block");
+    menuIcon.src = "./Assets/Images/hamburger.svg";
+  }
+
+  isOpen = !isOpen; // Toggle the open state
+}
+
+// Wait until the DOM is fully loaded before adding event listeners
+document.addEventListener("DOMContentLoaded", function () {
+  const hamburger = document.querySelector(".hamburger");
+  hamburger.addEventListener("click", openNav);
+});
+
+
+// Select all navigation items
+const navItems = document.querySelectorAll('.nav-item');
+
+navItems.forEach(item => {
+  item.addEventListener('click', function() {
+    // Remove 'active' class from all nav-items
+    navItems.forEach(nav => nav.classList.remove('active'));
+
+    // Add 'active' class to the clicked nav-item
+    this.classList.add('active');
+  });
+});
+
+//Bottom Nav
+
+let lastScrollTop = 0;
+const bottomNav = document.getElementById("bottomNav");
+
+window.addEventListener("scroll", function() {
+  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+  if (scrollTop > lastScrollTop) {
+    // Scroll Down - Hide the bottom navigation
+    bottomNav.classList.add("hidden");
+  } else {
+    // Scroll Up - Show the bottom navigation
+    bottomNav.classList.remove("hidden");
+  }
+
+  lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+});
+
+// Initial setup
+setEvents();
+ 
