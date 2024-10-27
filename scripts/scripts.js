@@ -1,4 +1,3 @@
-// Get the hamburger menu and nav links container elements
 const hamburger = document.getElementById("hamburger");
 const menuIcon = document.getElementById("hamburger");
 const navLinksContainer = document.querySelector(".nav-links-container");
@@ -12,7 +11,10 @@ const modal = document.getElementById("event-modal");
 const closeButton = document.getElementById("close-button");
 let currentlyOpenRow = null; // Variable to keep track of the currently open row
 
-// Function to toggle the menu
+// Set Events
+let eventsPerPage = 10;
+let currentPage = 1;
+
 function toggleMenu() {
   navLinksContainer.classList.toggle("active");
 
@@ -207,58 +209,6 @@ const events = [
   }
 ];
 
-// Set Events
-let eventsPerPage = 10;
-let currentPage = 1;
-
-// Function to open the modal with event data
-function openModal(eventData) {
-  const title = modal.querySelector('.primary-title');
-  const img = modal.querySelector('#modal-speaker-image');
-  const description = modal.querySelector('#modal-event-description');
-  const date = modal.querySelector('#modal-event-date');
-  const speaker = modal.querySelector('#modal-speaker-name');
-
-  // Populate modal with event data
-  title.textContent = eventData.eventName || "No title available";
-  img.src = eventData.speakerImage || "";
-  description.textContent = eventData.description || "No description available.";
-  date.textContent = eventData.date || "No date available.";
-  speaker.textContent = eventData.speaker || "No speaker available.";
-
-  // Show modal
-  modal.style.display = 'flex';
-}
-
-// Function to close the modal
-closeButton.onclick = function () {
-  modal.style.display = 'none';
-};
-
-document.querySelectorAll(".close-button").forEach((n) =>
-  n.addEventListener("click", () => {
-    modal.classList.remove("active");
-  })
-);
-
-// Close the modal if the user clicks outside the modal content
-window.onclick = function (event) {
-  if (event.target === modal) {
-    modal.style.display = 'none';
-  }
-};
-
-modalbtn = document.addEventListener('click', openModal)
-
-// Add event listeners to the "event-row" class to trigger the modal
-document.querySelectorAll('.event-row').forEach((row, index) => {
-  row.addEventListener('click', () => {
-    const eventData = events[index];
-    openModal(eventData);
-  });
-});
-
-
 function setEvents(filteredEvents = events) {
   let html = "";
   const eventCount = filteredEvents.length;
@@ -366,7 +316,6 @@ function toggleDetails(row) {
   }
 }
 
-
 function setPageNumbers(currentPage, totalPages) {
   const currentPageElement = document.getElementById('current-page');
 
@@ -416,7 +365,6 @@ function changeEventsPerPage(count) {
   currentPage = 1;
   setEvents();
 }
-
 
 // Example previous year values for total events, active speakers, and registrations
 // Previous year data
@@ -484,46 +432,6 @@ document.addEventListener("DOMContentLoaded", function () {
   displayPercentageChange(previousYearData.revenue, currentYearData.revenue, "percentage-change");
 });
 
-
-// Function to go to a specific page
-function goToPage(pageNumber) {
-  currentPage = pageNumber;
-  setEvents();
-}
-
-// Function to go to the next page
-function nextPage() {
-  const totalPages = Math.ceil(events.length / eventsPerPage);
-  if (currentPage < totalPages) {
-    currentPage++;
-    setEvents();
-  }
-}
-
-// Function to go to the previous page
-function prevPage() {
-  if (currentPage > 1) {
-    currentPage--;
-    setEvents();
-  }
-}
-
-// Function to count the number of events that are "In Progress"
-function countInProgressEvents() {
-  const inProgressCount = events.filter(event => event.status === "In Progress").length;
-  const inProgressCountElement = document.getElementById("in-progress-count");
-  if (inProgressCountElement) {
-    inProgressCountElement.innerHTML = `${inProgressCount}`;
-  }
-  return inProgressCount;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  countInProgressEvents();
-  setEvents(); // Initially load all events
-});
-
-
 //Chart file
 
 function revenueChart() {
@@ -574,6 +482,41 @@ function revenueChart() {
 }
 
 document.addEventListener("DOMContentLoaded", revenueChart);
+
+// Carousel Slider
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.carousel-inner .carousel-item');
+const dots = document.querySelectorAll('.dot');
+
+// Function to update the carousel display
+function updateCarousel() {
+  // Hide all slides and remove active class from dots
+  slides.forEach((slide, index) => {
+    slide.classList.remove('active');
+    dots[index]?.classList.remove('active');
+  });
+
+  // Show the current slide and set the corresponding dot to active
+  slides[currentSlideIndex].classList.add('active');
+  dots[currentSlideIndex].classList.add('active');
+}
+
+// Function to go to the next slide
+function nextSlide() {
+  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+  updateCarousel();
+};
+
+// Function to go to the previous slide
+function prevSlide() {
+  currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+  updateCarousel();
+}
+
+setInterval(nextSlide, 400000);
+
+document.querySelector('.carousel-next').addEventListener('click', nextSlide);
+document.querySelector('.carousel-prev').addEventListener('click', prevSlide);
 
 // Function to handle search by name, status, and date
 function handleSearch() {
@@ -659,44 +602,92 @@ document.addEventListener("DOMContentLoaded", () => {
   handleSearch();
 });
 
-// Carousel Slider
-let currentSlideIndex = 0;
-const slides = document.querySelectorAll('.carousel-inner .carousel-item');
-const dots = document.querySelectorAll('.dot');
-
-// Function to update the carousel display
-function updateCarousel() {
-
-  // Hide all slides and remove active class from dots
-  slides.forEach((slide, index) => {
-    slide.classList.remove('active');
-    dots[index]?.classList.remove('active');
-  });
-
-  // Show the current slide and set the corresponding dot to active
-  slides[currentSlideIndex].classList.add('active');
-  dots[currentSlideIndex].classList.add('active');
+// Function to go to a specific page
+function goToPage(pageNumber) {
+  currentPage = pageNumber;
+  setEvents();
 }
 
-// Function to go to the next slide
-function nextSlide() {
-  currentSlideIndex = (currentSlideIndex + 1) % slides.length;
-  updateCarousel();
+// Function to go to the next page
+function nextPage() {
+  const totalPages = Math.ceil(events.length / eventsPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    setEvents();
+  }
+}
+
+// Function to go to the previous page
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    setEvents();
+  }
+}
+
+// Function to count the number of events that are "In Progress"
+function countInProgressEvents() {
+  const inProgressCount = events.filter(event => event.status === "In Progress").length;
+  const inProgressCountElement = document.getElementById("in-progress-count");
+  if (inProgressCountElement) {
+    inProgressCountElement.innerHTML = `${inProgressCount}`;
+  }
+  return inProgressCount;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  countInProgressEvents();
+  setEvents(); // Initially load all events
+});
+
+// Function to open the modal with event data
+function openModal(eventData) {
+  const title = modal.querySelector('.primary-title');
+  const img = modal.querySelector('#modal-speaker-image');
+  const description = modal.querySelector('#modal-event-description');
+  const date = modal.querySelector('#modal-event-date');
+  const speaker = modal.querySelector('#modal-speaker-name');
+
+  // Populate modal with event data
+  title.textContent = eventData.eventName || "No title available";
+  img.src = eventData.speakerImage || "";
+  description.textContent = eventData.description || "No description available.";
+  date.textContent = eventData.date || "No date available.";
+  speaker.textContent = eventData.speaker || "No speaker available.";
+
+  // Show modal
+  modal.style.display = 'flex';
+}
+
+// Function to close the modal
+closeButton.onclick = function () {
+  modal.style.display = 'none';
 };
 
-// Function to go to the previous slide
-function prevSlide() {
-  currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-  updateCarousel();
-}
+document.querySelectorAll(".close-button").forEach((n) =>
+  n.addEventListener("click", () => {
+    modal.classList.remove("active");
+  })
+);
 
-setInterval(nextSlide, 400000);
+// Close the modal if the user clicks outside the modal content
+window.onclick = function (event) {
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+};
 
-document.querySelector('.carousel-next').addEventListener('click', nextSlide);
-document.querySelector('.carousel-prev').addEventListener('click', prevSlide);
+modalbtn = document.addEventListener('click', openModal)
 
+// Add event listeners to the "event-row" class to trigger the modal
+document.querySelectorAll('.event-row').forEach((row, index) => {
+  row.addEventListener('click', () => {
+    const eventData = events[index];
+    openModal(eventData);
+  });
+});
 
-
+// Desktop nav
 let isOpen = false;
 
 function openNav() {
@@ -726,10 +717,9 @@ function openNav() {
     sidenav.classList.remove("small");
     mainContent.style.width = "80%";
     navLinks.style.width = "100%";
-    logo.style.display = "block"; // Show logo
-    navLinkText.forEach(link => link.style.display = "block"); // Show nav links
-    menuIcon.src = "./Assets/Images/hamburger.svg"; // Set the icon to hamburger
-
+    logo.style.display = "block"; 
+    navLinkText.forEach(link => link.style.display = "block");
+    menuIcon.src = "./Assets/Images/hamburger.svg";
   }
 
   isOpen = !isOpen; // Toggle the open state
@@ -741,6 +731,21 @@ document.addEventListener("DOMContentLoaded", function () {
   hamburger.addEventListener("click", openNav);
 });
 
+
+// Select all navigation items
+const navItems = document.querySelectorAll('.nav-item');
+
+navItems.forEach(item => {
+  item.addEventListener('click', function() {
+    // Remove 'active' class from all nav-items
+    navItems.forEach(nav => nav.classList.remove('active'));
+
+    // Add 'active' class to the clicked nav-item
+    this.classList.add('active');
+  });
+});
+
+//Bottom Nav
 
 let lastScrollTop = 0;
 const bottomNav = document.getElementById("bottomNav");
@@ -756,21 +761,7 @@ window.addEventListener("scroll", function() {
     bottomNav.classList.remove("hidden");
   }
 
-  lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-});
-
-
-// Select all navigation items
-const navItems = document.querySelectorAll('.nav-item');
-
-navItems.forEach(item => {
-  item.addEventListener('click', function() {
-    // Remove 'active' class from all nav-items
-    navItems.forEach(nav => nav.classList.remove('active'));
-
-    // Add 'active' class to the clicked nav-item
-    this.classList.add('active');
-  });
+  lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 });
 
 // Initial setup
