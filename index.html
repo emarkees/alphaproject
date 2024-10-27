@@ -1,11 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alpha Twelve</title>
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="scripts/scripts.js"></script>
 </head>
 <body>
-  <div>heklskdksdklskl</div>
+  <!-- Main header section -->
+
+  <header class="main-header">
+    <nav class="navbar">
+      <div class="logo-container">
+        <div class="logo">
+          <a href="#">YourLogo</a>
+        </div>
+        <div class="hamburger menuacton" id="hamburger">
+          <i class="fa-solid fa-bars" id="menu-icon"></i>
+        </div>
+      </div>
+
+      <div class="nav-links-container">
+        <ul class="nav-links">
+          <li class="nav-menu"><img src="./Assets/Images/Home.png" alt="home" class="nav-img"><a href="#">Home</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Event.png" alt="home" class="nav-img"><a href="#">Events</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Speaker.png" alt="home" class="nav-img"><a href="#">Speakers</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Report.png" alt="home" class="nav-img"><a href="#">Reports</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Notification.png" alt="home" class="nav-img"><a href="#">Notifications</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Message.png" alt="home" class="nav-img"><a href="#">Messages</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Setting.png" alt="home" class="nav-img"><a href="#">Settings</a></li>
+          <div class="dark-mode">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <span class="dm-text">Dark mode</span>
+          </div>
+          <li class="nav-menu"><img src="./Assets/Images/User.png" alt="home" class="nav-img"><a href="#">Yemi Olusola</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+  <header class="lg-main-header" id="mySidenav">
+    <nav class="navbar">
+      <div class="logo-container" id="logo-container">
+        <div class="logo" id="logo">
+          <a href="#">YourLogo</a>
+        </div>
+        <div class="hamburger menuacton" id="menu-icon" onclick="openNav()">
+          <img src="./Assets/Images/hamburger.svg" alt="Menu" id="menu-icon">
+        </div>
+      </div>
+      <!--Desktop nav-->
+      <div class="nav-links-container" id="nav-links-container">
+        <ul class="nav-links" id="nav-links">
+          <li class="nav-menu"><img src="./Assets/Images/Home.png" alt="home" class="nav-img"><a href="#" id="nav-link">Home</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Event.png" alt="home" class="nav-img"><a href="#" id="nav-link">Events</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Speaker.png" alt="home" class="nav-img"><a href="#" id="nav-link">Speakers</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Report.png" alt="home" class="nav-img"><a href="#" id="nav-link">Reports</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Notification.png" alt="home" class="nav-img"><a href="#" id="nav-link">Notifications</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Message.png" alt="home" class="nav-img"><a href="#" id="nav-link">Messages</a></li>
+          <li class="nav-menu"><img src="./Assets/Images/Setting.png" alt="home" class="nav-img"><a href="#" id="nav-link">Settings</a></li>
+          <div class="dark-mode">
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <span class="dm-text">Dark mode</span>
+          </div>
+          <li class="nav-menu"><img src="./Assets/Images/User.png" alt="home" class="nav-img"><a href="#" id="nav-link">Yemi Olusola</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
 </body>
 </html>
