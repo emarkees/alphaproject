@@ -303,6 +303,37 @@
         </div>
       </div>
     </section>
+
+    <!-- Modal Structure -->
+    <div id="event-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-name">
+          <div class="modal-name-con">
+            <strong>
+              Event Name
+              <h2 class="primary-title" id="modal-event-name"></h2>
+            </strong>
+            <p><strong>Date:</strong> <span id="modal-event-date"></span></p>
+          </div>
+          <span class="close-button" id="close-button">&times;</span>
+        </div>
+        <div class="discription">
+          <p id="modal-event-description" class="modal-primary-body-text"></p>
+        </div>
+        <div class="modal-speaker">
+          <img id="modal-speaker-image" class="card-background-image" src="" alt="Speaker Image" style="width: 100px; height: auto;">
+          <p><strong>Speaker:</strong>
+            <span id="modal-speaker-name"></span>
+          </p>
+        </div>
+
+        <div class="modal-buttons">
+          <button id="edit-button">Edit</button>
+          <button id="delete-button">Delete</button>
+          <button id="complete-button">Mark as Completed</button>
+        </div>
+      </div>
+    </div>
   </main>
 </body>
 
