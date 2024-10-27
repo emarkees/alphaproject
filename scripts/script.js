@@ -320,3 +320,54 @@ document.addEventListener("DOMContentLoaded", function () {
   displayPercentageChange(previousYearData.registrations, currentYearData.registrations, "registration-change");
   displayPercentageChange(previousYearData.revenue, currentYearData.revenue, "percentage-change");
 });
+
+//Chart file
+
+function revenueChart() {
+  const monthlyRevenue = Array(12).fill(0);
+  events.forEach(event => {
+    const eventMonth = new Date(event.date).getMonth();
+    monthlyRevenue[eventMonth] += event.price || 0; // Ensure price exists (if price is missing, use 0)
+  });
+  const monthLabels = ["Ja", "Fb", "Mr", "Ap", "Ma", "Jn", "Jl", "Au", "Se", "Oc", "No", "De"];
+  const ctx = document.getElementById("myChart").getContext('2d');
+  const chart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: monthLabels,
+      datasets: [
+        {
+          data: monthlyRevenue,
+          borderWidth: 2,
+          backgroundColor: "#8576ff",
+          borderDash: [1, 1],
+        },
+      ],
+    },
+    options: {
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 200,
+          },
+          grid: {
+            borderDash: [5, 4],
+          },
+        },
+        x: {
+          grid: {
+            display: true,
+          },
+        },
+      },
+    },
+  });
+}
+
+document.addEventListener("DOMContentLoaded", revenueChart);
