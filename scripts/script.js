@@ -406,3 +406,88 @@ setInterval(nextSlide, 400000);
 
 document.querySelector('.carousel-next').addEventListener('click', nextSlide);
 document.querySelector('.carousel-prev').addEventListener('click', prevSlide);
+
+// Function to handle search by name, status, and date
+function handleSearch() {
+  const searchInput = document.getElementById("event-search").value.toLowerCase();
+  const statusInput = document.getElementById("status-search").value;
+  const dateInput = document.getElementById("search-date").value;
+
+  // Filter events based on search criteria
+  const matchedEvents = events.filter(event => {
+    const matchesName = event.eventName.toLowerCase().includes(searchInput);
+    const matchesStatus = statusInput ? event.status === statusInput : true;
+    const matchesDate = dateInput ? new Date(event.date) >= new Date(dateInput) : true;
+
+    return matchesName && matchesStatus && matchesDate;
+  });
+
+  // Update the event table with filtered events
+  setEvents(matchedEvents);
+}
+
+// Sort Events
+function sortEvents(sortType) {
+  let sortedEvents = [...events]; 
+  if (sortType === "most-recent") {
+    sortedEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
+  } else if (sortType === "alphabetical") {
+    sortedEvents.sort((a, b) => a.eventName.localeCompare(b.eventName));
+  }
+  setEvents(sortedEvents);
+}
+
+document.getElementById('sort').addEventListener('change', function() {
+  sortEvents(this.value);
+});
+
+
+// Function to update the event table with the search results
+function updateEventTable(eventsToShow) {
+  const eventTableBody = document.getElementById("event-table-body");
+  eventTableBody.innerHTML = "";
+
+  if (eventsToShow.length > 0) {
+    eventsToShow.forEach(event => {
+      // Style for status type
+      let statusStyle = "";
+      if (event.status === "Completed") {
+        statusStyle = "background-color: #10B981; color: white;";
+      } else if (event.status === "In Progress") {
+        statusStyle = "background-color: #3B82F6; color: white;";
+      }
+
+      // Create table rows for each event
+      const row = document.createElement("tbody");
+      row.innerHTML = `
+        <tr class="event-row" onclick="toggleDetails(this)">
+          <td class="event-name">
+            <div class="dropdown">
+              <i class="fa-solid fa-angle-right dropdown-icon fa-1x"></i>
+            </div>
+            ${event.eventName}
+          </td>
+          <td class="status-type" style="${statusStyle}>
+            <p>${event.status}</p>
+          </td>
+        </tr>
+        <tr class="event-details" style="display: none;">
+          <td>${event.speaker}</td>
+          <td colspan="2">${event.date}</td>
+        </tr>
+      `;
+      eventTableBody.appendChild(row);
+    });
+  } else {
+    // Show message if no events match the search criteria
+    const row = document.createElement("tr");
+    row.innerHTML = `<td colspan="2">No events found</td>`;
+    eventTableBody.appendChild(row);
+  }
+}
+
+// Call this function when the DOM is ready to show all events initially
+document.addEventListener("DOMContentLoaded", () => {
+  handleSearch();
+});
+
