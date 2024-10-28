@@ -8,7 +8,7 @@ const rowCounts = document.getElementById("rows-count");
 const currentPages = document.getElementById("current-page");
 const totalPage = document.getElementById("total-pages");
 const modal = document.getElementById("event-modal");
-const closeButton = document.getElementById("close-button");
+const closeButton = document.getElementById("#close-button");
 let currentlyOpenRow = null; // Variable to keep track of the currently open row
 
 // Set Events
@@ -656,11 +656,12 @@ function openModal(eventData) {
   speaker.textContent = eventData.speaker || "No speaker available.";
 
   // Show modal
-  modal.style.display = 'flex';
+  modal.classList.add('active');
 }
 
 // Function to close the modal
-closeButton.onclick = function () {
+function closeModal() {
+  closeModal
   modal.style.display = 'none';
 };
 

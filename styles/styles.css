@@ -1237,3 +1237,13 @@ a .indicator.active {
     table-layout: fixed;
   }
 }
+
+/* Initially hidden */
+#modal {
+  display: none;
+}
+
+/* Show modal when active */
+#modal.active {
+  display: flex;
+}
