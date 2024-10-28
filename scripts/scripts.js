@@ -642,7 +642,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Function to open the modal with event data
-// Function to open the modal with event data
 function openModal(eventData) {
   if (!modal) {
     console.error('Modal element not found');
@@ -666,11 +665,9 @@ function openModal(eventData) {
 
   // Add event listener to the close button
   closeButton.addEventListener('click', function() {
-    modal.style.display = 'none'; // Hide modal on close button click
+    modal.style.display = 'none';
   });
 }
-
-// Close the modal if the user clicks outside the modal content
 
 const modalbtn = getElementById('#mobile-only')
 
@@ -683,7 +680,6 @@ document.querySelectorAll('event-details').forEach((row, index) => {
     openModal(eventData);
   });
 });
-
 
 // Desktop nav
 let isOpen = false;
@@ -729,16 +725,12 @@ document.addEventListener("DOMContentLoaded", function () {
   hamburger.addEventListener("click", openNav);
 });
 
-
 // Select all navigation items
 const navItems = document.querySelectorAll('.nav-item');
 
 navItems.forEach(item => {
   item.addEventListener('click', function() {
-    // Remove 'active' class from all nav-items
     navItems.forEach(nav => nav.classList.remove('active'));
-
-    // Add 'active' class to the clicked nav-item
     this.classList.add('active');
   });
 });
