@@ -7,7 +7,7 @@ const totalEvents = document.getElementById("total-event");
 const rowCounts = document.getElementById("rows-count");
 const currentPages = document.getElementById("current-page");
 const totalPage = document.getElementById("total-pages");
-const modal = document.getElementById("event-modal");
+const modal = document.querySelector("#event-modal");
 const closeButton = document.getElementById("close-button");
 let currentlyOpenRow = null; // Variable to keep track of the currently open row
 
@@ -15,7 +15,7 @@ let currentlyOpenRow = null; // Variable to keep track of the currently open row
 let eventsPerPage = 10;
 let currentPage = 1;
 
-function toggleMenu() {
+function toggleMenu(event) {
   navLinksContainer.classList.toggle("active");
 
   if (hamburger.classList.toggle("active")) {
@@ -25,6 +25,7 @@ function toggleMenu() {
     menuIcon.innerHTML = `<i class="fa-solid fa-bars"></i>`;
     menuIcon.alt = "Open Menu";
   }
+  event.stopPropagation(); 
 }
 
 // Add click event listener to the hamburger menu
@@ -252,7 +253,7 @@ function setEvents(filteredEvents = events) {
         </tr>
         <!-- These details are hidden on desktop and shown on mobile when the row is clicked -->
         
-        <tr class="event-details mobile-only" style="display: none;">
+        <tr class="event-details mobile-only" id="mobile-only" style="display: none;">
           <td class="sp-name details-content" id="sp-name">
             <p>${items.speaker}</p>
           </td>
@@ -642,6 +643,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Function to open the modal with event data
 function openModal(eventData) {
+  if (!modal) {
+    console.error('Modal element not found');
+    return;
+  }
   const title = modal.querySelector('.primary-title');
   const img = modal.querySelector('#modal-speaker-image');
   const description = modal.querySelector('#modal-event-description');
@@ -657,30 +662,19 @@ function openModal(eventData) {
 
   // Show modal
   modal.style.display = 'flex';
+
+  // Add event listener to the close button
+  closeButton.addEventListener('click', function() {
+    modal.style.display = 'none';
+  });
 }
 
-// Function to close the modal
-closeButton.onclick = function () {
-  modal.style.display = 'none';
-};
-
-document.querySelectorAll(".close-button").forEach((n) =>
-  n.addEventListener("click", () => {
-    modal.classList.remove("active");
-  })
-);
-
-// Close the modal if the user clicks outside the modal content
-window.onclick = function (event) {
-  if (event.target === modal) {
-    modal.style.display = 'none';
-  }
-};
+const modalbtn = getElementById('#mobile-only')
 
 modalbtn = document.addEventListener('click', openModal)
 
 // Add event listeners to the "event-row" class to trigger the modal
-document.querySelectorAll('.event-row').forEach((row, index) => {
+document.querySelectorAll('event-details').forEach((row, index) => {
   row.addEventListener('click', () => {
     const eventData = events[index];
     openModal(eventData);
@@ -731,16 +725,12 @@ document.addEventListener("DOMContentLoaded", function () {
   hamburger.addEventListener("click", openNav);
 });
 
-
 // Select all navigation items
 const navItems = document.querySelectorAll('.nav-item');
 
 navItems.forEach(item => {
   item.addEventListener('click', function() {
-    // Remove 'active' class from all nav-items
     navItems.forEach(nav => nav.classList.remove('active'));
-
-    // Add 'active' class to the clicked nav-item
     this.classList.add('active');
   });
 });
